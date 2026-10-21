@@ -1,4 +1,4 @@
-# Lab 1 Starter - Web & Mobile Application Development
+# Student Course Dashboard
 
 This repository contains the starter code and implementation for Lab 1.
 
