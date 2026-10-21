@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { courses } from './data/courses';
 
 function CourseCard({ course }) {
@@ -29,17 +30,50 @@ function CourseCard({ course }) {
 }
 
 export default function App() {
+  const [filter, setFilter] = useState('all');
+
+  // Filter courses based on user selection
+  const filteredCourses = courses.filter(course => {
+    if (filter === 'completed') return course.completed;
+    if (filter === 'in-progress') return !course.completed;
+    return true; // 'all'
+  });
+
   return (
     <main>
       <h1>My Course Dashboard</h1>
+
+      {/* Interactive Filter Buttons */}
+      <div className="filter-container">
+        <button 
+          className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
+          onClick={() => setFilter('all')}
+        >
+          All Courses ({courses.length})
+        </button>
+        <button 
+          className={`filter-btn ${filter === 'in-progress' ? 'active' : ''}`}
+          onClick={() => setFilter('in-progress')}
+        >
+          In Progress
+        </button>
+        <button 
+          className={`filter-btn ${filter === 'completed' ? 'active' : ''}`}
+          onClick={() => setFilter('completed')}
+        >
+          Completed
+        </button>
+      </div>
+
+      {/* Course Grid / Empty State */}
       <section className="grid">
-        {courses && courses.length > 0 ? (
-          courses.map(c => <CourseCard key={c.id} course={c} />)
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map(c => <CourseCard key={c.id} course={c} />)
         ) : (
           <div className="empty-state">
-            <span style={{ fontSize: '2.5rem' }}>📚</span>
-            <h3>No Courses Available</h3>
-            <p>You haven't added or enrolled in any courses yet. Please check back later or contact your administrator.</p>
+            <span style={{ fontSize: '2.5rem' }}>🔍</span>
+            <h3>No Courses Found</h3>
+            <p>There are no courses matching this filter category.</p>
           </div>
         )}
       </section>
